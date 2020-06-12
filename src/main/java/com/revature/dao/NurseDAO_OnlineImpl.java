@@ -2,6 +2,7 @@ package com.revature.dao;
 
 import com.revature.models.Nurse;
 import com.revature.models.Resident;
+import com.revature.services.ConnectionService;
 
 
 import java.sql.*;
@@ -13,18 +14,10 @@ import java.util.Scanner;
 
 public class NurseDAO_OnlineImpl implements NurseDAO {
 
-    Connection connection;
+    ConnectionService connectionService = ConnectionService.getInstance();
 
     //Setting Up Connection to our DataBase
     public NurseDAO_OnlineImpl(){
-
-        try{
-            connection = DriverManager.getConnection("jdbc:postgresql://ruby.db.elephantsql.com:5432/yrngucii/", "yrngucii", "1FM_VybxeviYjdHIPgTGcB3nXwlndbh6" );
-            System.out.println("Successful Connection to Database!");
-        }catch (SQLException e){
-            System.out.println("Could not connect to Database!");
-            e.printStackTrace();
-        }
 
     }
 
@@ -37,7 +30,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
         try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM nurses;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM nurses;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -75,7 +68,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
         try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM nurses;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM nurses;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -112,7 +105,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
             try{
 
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO nurses (firstname, lastname, iscert, assignments) VALUES (?,?,?,?);");
+                PreparedStatement ps = connectionService.getConnection().prepareStatement("INSERT INTO nurses (firstname, lastname, iscert, assignments) VALUES (?,?,?,?);");
                 ps.setString(1, nurse.getFirstname());
                 ps.setString(2, nurse.getLastname());
                 ps.setBoolean(3, nurse.getMedCert());
@@ -145,7 +138,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
             Nurse nurse = nurseList.get(indexNum - 1);
 
             //If both the Nurse's First and Last Name equals to what was inputted the Nurse is deleted.
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM nurses as r WHERE r.firstname = ? AND r.lastname = ? AND iscert = ? AND assignments = ?;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("DELETE FROM nurses as r WHERE r.firstname = ? AND r.lastname = ? AND iscert = ? AND assignments = ?;");
             ps.setString(1, nurse.getFirstname());
             ps.setString(2, nurse.getLastname());
             ps.setBoolean(3, nurse.getMedCert());
@@ -203,7 +196,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
         try {
 
             //If both the Nurse's First and Last Name equals to what was inputted the Nurse is deleted.
-            PreparedStatement ps = connection.prepareStatement("UPDATE nurses as r SET firstname = ?, lastname = ?, iscert = ? WHERE r.firstname = ? AND r.lastname = ? AND r.iscert = ?;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE nurses as r SET firstname = ?, lastname = ?, iscert = ? WHERE r.firstname = ? AND r.lastname = ? AND r.iscert = ?;");
             ps.setString(1, firstName);
             ps.setString(2, lastName);
             ps.setBoolean(3, iscert);
@@ -232,7 +225,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
         int noCertassignments = 0;
 
         try{
-            Statement mps = connection.createStatement();
+            Statement mps = connectionService.getConnection().createStatement();
             mps.executeUpdate("UPDATE nurses SET assignments = 0");
             mps.executeUpdate("UPDATE residents SET nurseid = 0;");
 
@@ -254,7 +247,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                         if (nurse.getMedCert() == true) {
                             assignments = assignments + 1;
                             try {
-                                PreparedStatement ps = connection.prepareStatement("UPDATE nurses SET assignments = ? WHERE firstname = ? AND lastname = ? AND iscert = ?;");
+                                PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE nurses SET assignments = ? WHERE firstname = ? AND lastname = ? AND iscert = ?;");
                                 ps.setInt(1, (nurse.getAssignments() + 1));
                                 ps.setString(2, nurse.getFirstname());
                                 ps.setString(3, nurse.getLastname());
@@ -267,7 +260,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                                 e.printStackTrace();
                             }
                             try {
-                                PreparedStatement nps = connection.prepareStatement("SELECT nurses.id FROM nurses WHERE firstname = ? AND lastname = ? AND iscert = ?;");
+                                PreparedStatement nps = connectionService.getConnection().prepareStatement("SELECT nurses.id FROM nurses WHERE firstname = ? AND lastname = ? AND iscert = ?;");
                                 nps.setString(1, nurse.getFirstname());
                                 nps.setString(2, nurse.getLastname());
                                 nps.setBoolean(3, nurse.getMedCert());
@@ -281,7 +274,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                                 }
 
 
-                                PreparedStatement ps = connection.prepareStatement("UPDATE residents SET nurseid = ? WHERE firstname = ? AND lastname = ? AND ailment = ?;");
+                                PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE residents SET nurseid = ? WHERE firstname = ? AND lastname = ? AND ailment = ?;");
                                 ps.setInt(1, nurseIndex);
                                 ps.setString(2, resident.getFirstName());
                                 ps.setString(3, resident.getLastName());
@@ -310,7 +303,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                             noCertassignments = noCertassignments + 1;
 
                             try {
-                                PreparedStatement ps = connection.prepareStatement("UPDATE nurses SET assignments = ? WHERE firstname = ? AND lastname = ? AND iscert = ?;");
+                                PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE nurses SET assignments = ? WHERE firstname = ? AND lastname = ? AND iscert = ?;");
                                 ps.setInt(1, (nurse.getAssignments() + 1));
                                 ps.setString(2, nurse.getFirstname());
                                 ps.setString(3, nurse.getLastname());
@@ -323,7 +316,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                                 e.printStackTrace();
                             }
                             try {
-                                PreparedStatement nps = connection.prepareStatement("SELECT nurses.id FROM nurses WHERE firstname = ? AND lastname = ? AND iscert = ?;");
+                                PreparedStatement nps = connectionService.getConnection().prepareStatement("SELECT nurses.id FROM nurses WHERE firstname = ? AND lastname = ? AND iscert = ?;");
                                 nps.setString(1, nurse.getFirstname());
                                 nps.setString(2, nurse.getLastname());
                                 nps.setBoolean(3, nurse.getMedCert());
@@ -337,7 +330,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                                 }
 
 
-                                PreparedStatement ps = connection.prepareStatement("UPDATE residents SET nurseid = ? WHERE firstname = ? AND lastname = ?");
+                                PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE residents SET nurseid = ? WHERE firstname = ? AND lastname = ?");
                                 ps.setInt(1, nurseIndex);
                                 ps.setString(2, resident.getFirstName());
                                 ps.setString(3, resident.getLastName());

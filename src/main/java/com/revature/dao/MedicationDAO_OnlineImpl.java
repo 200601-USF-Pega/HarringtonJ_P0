@@ -4,6 +4,7 @@ import com.revature.models.*;
 import com.revature.models.Medication;
 import com.revature.models.Medication;
 import com.revature.models.Medication;
+import com.revature.services.ConnectionService;
 
 import java.io.*;
 import java.sql.*;
@@ -14,18 +15,21 @@ import java.util.Scanner;
 
 public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
-    Connection connection;
+    ConnectionService connectionService = ConnectionService.getInstance();
+
+
+/*    Connection connection;*/
 
     //Setting Up Connection to our DataBase
     public MedicationDAO_OnlineImpl(){
-
+/*
         try{
             connection = DriverManager.getConnection("jdbc:postgresql://ruby.db.elephantsql.com:5432/yrngucii/", "yrngucii", "1FM_VybxeviYjdHIPgTGcB3nXwlndbh6" );
             System.out.println("Successful Connection to Database!");
         }catch (SQLException e){
             System.out.println("Could not connect to Database!");
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -39,7 +43,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
         try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM medications;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM medications;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -78,7 +82,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
         try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM medications;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM medications;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -113,7 +117,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
             try{
 
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO medications (name, ailment, lethaldosage) VALUES (?,?,?);");
+                PreparedStatement ps = connectionService.getConnection().prepareStatement("INSERT INTO medications (name, ailment, lethaldosage) VALUES (?,?,?);");
                 ps.setString(1, medication.getMedName());
                 ps.setString(2, medication.getTreatedAilment());
                 ps.setInt(3, medication.getLethalDosage());
@@ -146,7 +150,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
             Medication medication = medicationList.get(indexNum - 1);
 
             //If both the Medication's First and Last Name equals to what was inputted the Medication is deleted.
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM medications as r WHERE r.name = ? AND r.ailment = ? AND r.lethaldosage = ?;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("DELETE FROM medications as r WHERE r.name = ? AND r.ailment = ? AND r.lethaldosage = ?;");
             ps.setString(1, medication.getMedName());
             ps.setString(2, medication.getTreatedAilment());
             ps.setInt(3, medication.getLethalDosage());
@@ -190,7 +194,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
         try {
             //If both the Medication's First and Last Name equals to what was inputted the Medication is deleted.
-            PreparedStatement ps = connection.prepareStatement("UPDATE medications as r SET name = ?, ailment = ?, lethaldosage = ? WHERE r.name = ? AND r.ailment = ? AND r.lethaldosage = ?;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE medications as r SET name = ?, ailment = ?, lethaldosage = ? WHERE r.name = ? AND r.ailment = ? AND r.lethaldosage = ?;");
             ps.setString(1, name);
             ps.setString(2, ailment);
             ps.setInt(3, lethaldosage);
@@ -221,7 +225,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
         try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM residents_medication;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM residents_medication;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){

@@ -2,6 +2,7 @@ package com.revature.dao;
 
 import  com.revature.models.Medication;
 import com.revature.models.Resident;
+import com.revature.services.ConnectionService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,18 +13,11 @@ import java.util.Scanner;
 
 public class ResidentDAO_OnlineImpl implements ResidentDAO{
 
-    Connection connection;
+    ConnectionService connectionService = ConnectionService.getInstance();
 
     //Setting Up Connection to our DataBase
     public ResidentDAO_OnlineImpl(){
 
-        try{
-            connection = DriverManager.getConnection("jdbc:postgresql://ruby.db.elephantsql.com:5432/yrngucii/", "yrngucii", "1FM_VybxeviYjdHIPgTGcB3nXwlndbh6" );
-            System.out.println("Successful Connection to Database!");
-        }catch (SQLException e){
-            System.out.println("Could not connect to Database!");
-            e.printStackTrace();
-        }
 
     }
 
@@ -36,7 +30,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
 
     try {
 
-        PreparedStatement ps = connection.prepareStatement("SELECT * FROM residents;");
+        PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM residents;");
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()){
@@ -75,7 +69,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
 
         try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM residents;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM residents;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -114,7 +108,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
 
             try{
 
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO residents (firstname, lastname, ailment) VALUES (?,?,?);");
+                PreparedStatement ps = connectionService.getConnection().prepareStatement("INSERT INTO residents (firstname, lastname, ailment) VALUES (?,?,?);");
                 ps.setString(1, resident.getFirstName());
                 ps.setString(2, resident.getLastName());
                 ps.setString(3, resident.getAilment());
@@ -146,7 +140,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
             Resident resident = residentList.get(indexNum - 1);
 
                 //If both the Resident's First and Last Name equals to what was inputted the Resident is deleted.
-                    PreparedStatement ps = connection.prepareStatement("DELETE FROM residents as r WHERE r.firstname = ? AND r.lastname = ? AND ailment = ?;");
+                    PreparedStatement ps = connectionService.getConnection().prepareStatement("DELETE FROM residents as r WHERE r.firstname = ? AND r.lastname = ? AND ailment = ?;");
                     ps.setString(1, resident.getFirstName());
                     ps.setString(2, resident.getLastName());
                     ps.setString(3, resident.getAilment());
@@ -204,7 +198,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
         }
 try {
     //If both the Resident's First and Last Name equals to what was inputted the Resident is deleted.
-    PreparedStatement ps = connection.prepareStatement("UPDATE residents as r SET firstname = ?, lastname = ?, ailment = ? WHERE r.firstname = ? AND r.lastname = ? AND r.ailment = ?;");
+    PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE residents as r SET firstname = ?, lastname = ?, ailment = ? WHERE r.firstname = ? AND r.lastname = ? AND r.ailment = ?;");
     ps.setString(1, firstName);
     ps.setString(2, lastName);
     ps.setString(3, ailment);
@@ -234,7 +228,7 @@ try {
 
         try {
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM residents_medication;");
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM residents_medication;");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){

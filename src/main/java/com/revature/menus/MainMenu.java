@@ -1,9 +1,10 @@
 package com.revature.menus;
 
+import com.revature.services.ConnectionService;
+
 import java.util.Scanner;
 
 public class MainMenu implements IMenu {
-
 
 
     //We are overriding the IMenu's method tag
