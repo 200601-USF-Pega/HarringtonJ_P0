@@ -1,6 +1,7 @@
 package com.revature.menus;
 
 import com.revature.dao.NurseDAOImpl;
+import com.revature.dao.NurseDAO_OnlineImpl;
 import com.revature.models.Nurse;
 
 import java.io.IOException;
@@ -20,12 +21,12 @@ public class NurseMenu implements IMenu {
         Scanner sc = new Scanner(System.in);
 
         //This creates the Nurse Database Access Object
-        NurseDAOImpl nurseDAO = null;
+        NurseDAO_OnlineImpl nurseDAO = null;
 
         try {
             //We put this in a try catch block as this will be attempting to connect to an Online database
-            nurseDAO = new NurseDAOImpl();
-        } catch (IOException e) {
+            nurseDAO = new NurseDAO_OnlineImpl();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -35,17 +36,20 @@ public class NurseMenu implements IMenu {
         while (true) {
             //Options
             //Option UI
-            System.out.println("|=================================================|");
-            System.out.println("|  Press [1] :  Get a List of all Nurses          |");
-            System.out.println("|  Press [2] :  Add a Nurse                       |");
-            System.out.println("|  Press [3] :  Remove a Nurse                    |");
-            System.out.println("|  Press [0] :  Return to Main Menu               |");
-            System.out.println("|=================================================|");
+            System.out.println("|===================================================================|");
+            System.out.println("|  Press [1] :  Get a List of all Nurses                            |");
+            System.out.println("|  Press [2] :  Add a Nurse                                         |");
+            System.out.println("|  Press [3] :  Remove a Nurse                                      |");
+            System.out.println("|  Press [4] :  Update a Nurse                                      |");
+            System.out.println("|  Press [5] :  Assign Nurses to Residents                          |");
+            System.out.println("|  Press [0] :  Return to Main Menu                                 |");
+            System.out.println("|===================================================================|");
 
             //These Variables are for our Nurse Objects
             String firstName;
             String lastName;
             Boolean isMedCert;
+            int assignments;
 
             //Switching Menus based on User Input
             int nextMenu = sc.nextInt();
@@ -77,15 +81,26 @@ public class NurseMenu implements IMenu {
                                 continue;
                             }
                         }
-                    System.out.println(firstName + lastName + isMedCert);
-                    Nurse nurse = new Nurse(firstName, lastName, isMedCert);
+
+                    assignments = 0;
+
+                    Nurse nurse = new Nurse(firstName, lastName, isMedCert, assignments);
+
+                    System.out.println("Added: " + nurse.toString());
 
                     nurseDAO.addNurse(nurse);
 
                     break;
 
                 case 3:
-                    System.out.println("Please Enter Nurse's first name: ");
+                    nurseDAO.getAllNurses();
+                    System.out.println("Please Enter Nurse's index number: ");
+                    int indexNum = sc.nextInt();
+
+
+
+
+                    /*System.out.println("Please Enter Nurse's first name: ");
                     firstName = sc.next();
 
 
@@ -95,7 +110,21 @@ public class NurseMenu implements IMenu {
                     boolean b = nurseDAO.removeNurse(firstName, lastName);
                     if(b){
                         System.out.println("Removed Successfully: " + firstName + " " + lastName);
-                    }
+                    }*/
+
+                    nurseDAO.removeNurse(indexNum);
+                    
+                    break;
+                case 4:
+                    nurseDAO.getAllNurses();
+                    System.out.println("Please Enter Nurse's index number: ");
+                    indexNum = sc.nextInt();
+
+                    nurseDAO.updateNurse(indexNum);
+                    break;
+
+                case 5:
+                    nurseDAO.addNurseToResident();
                     break;
 
                 case 0:

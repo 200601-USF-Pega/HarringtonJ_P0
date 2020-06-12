@@ -1,0 +1,1 @@
+UPDATE residents as r SET firstname = 'George', lastname = 'Mekleson', ailment = 'Cancer' WHERE r.firstname = 'Kyle' AND r.lastname = 'Mekleson' AND ailment = 'Cancer';

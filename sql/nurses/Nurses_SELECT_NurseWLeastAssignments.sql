@@ -1,0 +1,1 @@
+SELECT * FROM nurses WHERE assignments = (SELECT MAX(assignments) FROM nurses)

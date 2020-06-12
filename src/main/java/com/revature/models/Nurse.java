@@ -11,15 +11,18 @@ public class Nurse implements Serializable {
     //This boolean asserts whether the Nurse is Certified to handle Medication
     private boolean isMedCert;
 
+    //This is the max number of residents a nurse can handle
+    private int assignments;
 
     /*------------------------------------------------------------------------------*/
                                  /* Constructors */
     /*------------------------------------------------------------------------------*/
 
-    public Nurse(String firstname, String lastname, boolean isMedCert) {
+    public Nurse(String firstname, String lastname, boolean isMedCert, int assignments) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.isMedCert = isMedCert;
+        this.assignments = assignments;
     }
 
     @Override
@@ -28,6 +31,7 @@ public class Nurse implements Serializable {
                 "firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", isMedCert=" + isMedCert +
+                ", assignments=" + assignments +
                 '}';
     }
 
@@ -50,11 +54,19 @@ public class Nurse implements Serializable {
         this.lastname = lastname;
     }
 
-    public boolean isMedCert() {
+    public boolean getMedCert() {
         return isMedCert;
     }
 
     public void setMedCert(boolean medCert) {
         isMedCert = medCert;
+    }
+
+    public int getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(int assignments) {
+        this.assignments = assignments;
     }
 }

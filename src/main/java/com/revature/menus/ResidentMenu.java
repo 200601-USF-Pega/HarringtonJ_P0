@@ -2,6 +2,7 @@ package com.revature.menus;
 
 import com.revature.dao.ResidentDAO;
 import com.revature.dao.ResidentDAOImpl;
+import com.revature.dao.ResidentDAO_OnlineImpl;
 import com.revature.models.Resident;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class ResidentMenu implements IMenu {
 
         try {
             //We put this in a try catch block as this will be attempting to connect to an Online database
-            residentDAO = new ResidentDAOImpl();
+            residentDAO = new ResidentDAO_OnlineImpl();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,12 +37,14 @@ public class ResidentMenu implements IMenu {
         while (true) {
             //Options
             //Option UI
-            System.out.println("|=================================================|");
-            System.out.println("|  Press [1] :  Get a List of all Residents       |");
-            System.out.println("|  Press [2] :  Add a Resident                    |");
-            System.out.println("|  Press [3] :  Remove a Resident                 |");
-            System.out.println("|  Press [0] :  Return to Main Menu               |");
-            System.out.println("|=================================================|");
+            System.out.println("|===================================================================|");
+            System.out.println("|  Press [1] :  Get a List of all Residents                         |");
+            System.out.println("|  Press [2] :  Add a Resident                                      |");
+            System.out.println("|  Press [3] :  Remove a Resident                                   |");
+            System.out.println("|  Press [4] :  Update a Resident                                   |");
+            System.out.println("|  Press [5] :  Get a List of all Residents who need Medication     |");
+            System.out.println("|  Press [0] :  Return to Main Menu                                 |");
+            System.out.println("|===================================================================|");
 
             //These Variables are for our Resident Objects
             String firstName;
@@ -59,6 +62,7 @@ public class ResidentMenu implements IMenu {
 
                 case 2:
                     boolean hasCondition = false;
+                    residentDAO.getAllResidents();
 
                     System.out.println("Please Enter Resident's first name: ");
                     firstName = sc.next();
@@ -107,7 +111,14 @@ public class ResidentMenu implements IMenu {
                     break;
 
                 case 3:
-                    System.out.println("Please Enter Resident's first name: ");
+                    residentDAO.getAllResidents();
+                    System.out.println("Please Enter Resident's index number: ");
+                    int indexNum = sc.nextInt();
+
+
+
+
+                    /*System.out.println("Please Enter Resident's first name: ");
                     firstName = sc.next();
 
 
@@ -117,7 +128,23 @@ public class ResidentMenu implements IMenu {
                     boolean b = residentDAO.removeResident(firstName, lastName);
                     if(b){
                         System.out.println("Removed Successfully: " + firstName + " " + lastName);
-                    }
+                    }*/
+
+                    residentDAO.removeResident(indexNum);
+
+                    break;
+
+                case 4:
+                    residentDAO.getAllResidents();
+                    System.out.println("Please Enter Resident's index number: ");
+                    indexNum = sc.nextInt();
+
+                    residentDAO.updateResident(indexNum);
+                    break;
+
+
+                case 5:
+                    residentDAO.getAllResidentsWithMeds();
                     break;
 
                 case 0:

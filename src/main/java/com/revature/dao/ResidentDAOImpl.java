@@ -9,10 +9,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResidentDAOImpl implements ResidentDAO{
+
 
    // List<Resident> residentList = new ArrayList<Resident>();
 
@@ -50,8 +54,8 @@ public class ResidentDAOImpl implements ResidentDAO{
         return null;
     }
 
-
-    private List<Resident> getAllResidentsNoPrint() {
+    @Override
+    public List<Resident> getAllResidentsNoPrint() {
 
 
         try {
@@ -100,10 +104,6 @@ public class ResidentDAOImpl implements ResidentDAO{
             }
 
 
-
-
-
-
             return true;
 
         } catch(Exception e){
@@ -116,6 +116,16 @@ public class ResidentDAOImpl implements ResidentDAO{
     }
 
     @Override
+    public boolean removeResident(int indexNum) {
+        return false;
+    }
+
+    @Override
+    public boolean updateResident(int indexNum) {
+        return false;
+    }
+
+
     public boolean removeResident(String firstName, String lastName) {
 
         try {
@@ -149,5 +159,11 @@ public class ResidentDAOImpl implements ResidentDAO{
 
 
 
+    }
+
+
+    @Override
+    public List<Resident> getAllResidentsWithMeds() {
+        return null;
     }
 }

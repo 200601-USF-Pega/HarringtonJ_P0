@@ -60,8 +60,8 @@ BufferedReader bufferedReader = new BufferedReader(fileReader);*/
         return null;
     }
 
-
-    private List<Nurse> getAllNursesNoPrint() {
+    @Override
+    public List<Nurse> getAllNursesNoPrint() {
 
 
         try {
@@ -125,6 +125,21 @@ BufferedReader bufferedReader = new BufferedReader(fileReader);*/
     }
 
     @Override
+    public boolean removeNurse(int indexNum) {
+        return false;
+    }
+
+    @Override
+    public boolean updateNurse(int indexNum) {
+        return false;
+    }
+
+    @Override
+    public boolean addNurseToResident() {
+        return false;
+    }
+
+
     public boolean removeNurse(String firstName, String lastName) {
 
         try {

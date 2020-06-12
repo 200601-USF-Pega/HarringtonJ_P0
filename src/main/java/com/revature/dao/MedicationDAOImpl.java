@@ -116,9 +116,23 @@ public class MedicationDAOImpl implements MedicationDAO{
         }
 
     }
-    
 
     @Override
+    public boolean removeMedication(int indexNum) {
+        return false;
+    }
+
+    @Override
+    public boolean updateMedication(int indexNum) {
+        return false;
+    }
+
+    @Override
+    public List<Medication> getListOfNeededMedication() {
+        return null;
+    }
+
+
     public boolean removeMedication(String medicationName) {
 
         try {

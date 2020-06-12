@@ -12,6 +12,8 @@ public class Resident implements Serializable {
     //This String holds what ailment the resident has
     private String ailment;
 
+    //
+    private int nurseid;
 
     /*------------------------------------------------------------------------------*/
     /* Constructors */
@@ -21,6 +23,7 @@ public class Resident implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.ailment = ailment;
+        this.nurseid = 0;
     }
 
     /*------------------------------------------------------------------------------*/
@@ -33,6 +36,7 @@ public class Resident implements Serializable {
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", ailment='" + ailment + '\'' +
+                ", nurseid=" + nurseid +
                 '}';
     }
 
@@ -62,5 +66,13 @@ public class Resident implements Serializable {
 
     public void setAilment(String ailment) {
         this.ailment = ailment;
+    }
+
+    public int getNurseid() {
+        return nurseid;
+    }
+
+    public void setNurseid(int nurseid) {
+        this.nurseid = nurseid;
     }
 }
