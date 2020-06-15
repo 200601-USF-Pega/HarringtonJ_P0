@@ -2,6 +2,8 @@ package com.revature.menus;
 
 import com.revature.dao.NurseDAOImpl;
 import com.revature.dao.NurseDAO_OnlineImpl;
+import com.revature.dao.ResidentDAO;
+import com.revature.dao.ResidentDAO_OnlineImpl;
 import com.revature.models.Nurse;
 
 import java.io.IOException;
@@ -30,6 +32,20 @@ public class NurseMenu implements IMenu {
             e.printStackTrace();
         }
 
+
+        //This creates the Resident Database Access Object
+        ResidentDAO residentDAO = null;
+
+        try {
+            //We put this in a try catch block as this will be attempting to connect to an Online database
+            residentDAO = new ResidentDAO_OnlineImpl();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
         //Welcome Message
         System.out.println("This is the Nurse Management Menu. Please Enter an option below");
 
@@ -42,6 +58,7 @@ public class NurseMenu implements IMenu {
             System.out.println("|  Press [3] :  Remove a Nurse                                      |");
             System.out.println("|  Press [4] :  Update a Nurse                                      |");
             System.out.println("|  Press [5] :  Assign Nurses to Residents                          |");
+            System.out.println("|  Press [6] :  To see Each assigned Resident for each Nurse.       |");
             System.out.println("|  Press [0] :  Return to Main Menu                                 |");
             System.out.println("|===================================================================|");
 
@@ -97,21 +114,6 @@ public class NurseMenu implements IMenu {
                     System.out.println("Please Enter Nurse's index number: ");
                     int indexNum = sc.nextInt();
 
-
-
-
-                    /*System.out.println("Please Enter Nurse's first name: ");
-                    firstName = sc.next();
-
-
-                    System.out.println("Please Enter Nurse's last name: ");
-                    lastName = sc.next();
-
-                    boolean b = nurseDAO.removeNurse(firstName, lastName);
-                    if(b){
-                        System.out.println("Removed Successfully: " + firstName + " " + lastName);
-                    }*/
-
                     nurseDAO.removeNurse(indexNum);
                     
                     break;
@@ -124,7 +126,12 @@ public class NurseMenu implements IMenu {
                     break;
 
                 case 5:
+                    nurseDAO.clearNurseToResident();
                     nurseDAO.addNurseToResident();
+                    break;
+
+                case 6:
+                    residentDAO.getAllResidentsWithNurses();
                     break;
 
                 case 0:

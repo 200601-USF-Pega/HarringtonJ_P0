@@ -1,8 +1,11 @@
 package com.revature.dao;
 
 import  com.revature.models.Medication;
+import com.revature.models.Nurse;
 import com.revature.models.Resident;
 import com.revature.services.ConnectionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,6 +17,8 @@ import java.util.Scanner;
 public class ResidentDAO_OnlineImpl implements ResidentDAO{
 
     ConnectionService connectionService = ConnectionService.getInstance();
+
+    private static final Logger LOGGER = LogManager.getLogger(ResidentDAO_OnlineImpl.class.getName());
 
     //Setting Up Connection to our DataBase
     public ResidentDAO_OnlineImpl(){
@@ -29,7 +34,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
         List<Resident> residentList = new ArrayList<Resident>();
 
     try {
-
+        LOGGER.info("Attempting to get a list of all Residents.");
         PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM residents;");
         ResultSet rs = ps.executeQuery();
 
@@ -49,14 +54,16 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
             System.out.println("["+indexNum+ "] " + resident.toString());
             ++indexNum;
         }
+        LOGGER.info("Successfully returned a list of all Residents.");
         return residentList;
     }catch(SQLException e){
+        LOGGER.error("Error getting a list of all Residents.");
         e.printStackTrace();
 
     } catch (Exception e){
-
+        LOGGER.error("Error getting a list of all Residents.");
     }
-
+        LOGGER.error("Returning a null list of all Residents.");
         return null;
 
     }
@@ -68,7 +75,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
         List<Resident> residentList = new ArrayList<Resident>();
 
         try {
-
+            LOGGER.info("Attempting to get a list of all Residents.");
             PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM residents;");
             ResultSet rs = ps.executeQuery();
 
@@ -79,17 +86,17 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
                 residentList.add(resident);
             }
 
-            for (Resident resident : residentList) {
-
-            }
+            LOGGER.info("Successfully returned a list of all Residents.");
             return residentList;
+
         }catch(SQLException e){
+            LOGGER.error("Error getting a list of all Residents.");
             e.printStackTrace();
 
         } catch (Exception e){
-
+            LOGGER.error("Error getting a list of all Residents.");
         }
-
+        LOGGER.error("Returning a null list of all Residents.");
         return null;
 
     }
@@ -100,6 +107,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
     @Override
     public boolean addResident(Resident resident) {
         resident.toString();
+        LOGGER.info("Attempting to add a Resident.");
        try {
 
             List<Resident> residentList = this.getAllResidentsNoPrint();
@@ -107,13 +115,13 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
             residentList.add(resident);
 
             try{
-
+                LOGGER.info("Inserting Resident into database.");
                 PreparedStatement ps = connectionService.getConnection().prepareStatement("INSERT INTO residents (firstname, lastname, ailment) VALUES (?,?,?);");
                 ps.setString(1, resident.getFirstName());
                 ps.setString(2, resident.getLastName());
                 ps.setString(3, resident.getAilment());
                 boolean didWork = ps.execute();
-
+                LOGGER.info("Successfully Added a Resident.");
                 return didWork;
 
 
@@ -127,6 +135,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
         } catch(Exception e){
             System.out.println(e.getStackTrace());
             System.out.println("Error Adding Resident. Please Check your inputs.");
+            LOGGER.error("Error Adding Resident.");
             return false;
         }
 
@@ -135,10 +144,15 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
     @Override
     public boolean removeResident(int indexNum) {
 
+        LOGGER.info("Attempting to remove a Resident.");
         try {
+
             List<Resident> residentList = this.getAllResidentsNoPrint();
+
             Resident resident = residentList.get(indexNum - 1);
 
+
+                 LOGGER.info("Deleting Resident from the database.");
                 //If both the Resident's First and Last Name equals to what was inputted the Resident is deleted.
                     PreparedStatement ps = connectionService.getConnection().prepareStatement("DELETE FROM residents as r WHERE r.firstname = ? AND r.lastname = ? AND ailment = ?;");
                     ps.setString(1, resident.getFirstName());
@@ -146,12 +160,15 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
                     ps.setString(3, resident.getAilment());
                     boolean didWork = ps.execute();
                     System.out.println("Deleted: " + resident.toString());
+
+                    LOGGER.info("Successfully Removed a Resident.");
                     return didWork;
 
 
 
 
         } catch(Exception e){
+            LOGGER.info("Error Removed a Resident.");
             System.out.println("No Resident exists with that name.");
             return false;
         }
@@ -161,6 +178,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
 
     @Override
     public boolean updateResident(int indexNum) {
+        LOGGER.info("Attempting to Update a Resident.");
         List<Resident> residentList = this.getAllResidentsNoPrint();
         Resident resident = residentList.get(indexNum - 1);
         Scanner sc = new Scanner(System.in);
@@ -182,7 +200,8 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
             try {
                 boolean hasAilment = sc.nextBoolean();
                 if(hasAilment){
-                    System.out.println("Please Enter Resident's condition: ");
+                    LOGGER.info("Updated Resident has a new ailment.");
+                    System.out.println("Please Enter Resident's ailment: ");
                     ailment = sc.next();
 
                 }
@@ -197,6 +216,7 @@ public class ResidentDAO_OnlineImpl implements ResidentDAO{
             }
         }
 try {
+    LOGGER.info("Updating Resident from the database.");
     //If both the Resident's First and Last Name equals to what was inputted the Resident is deleted.
     PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE residents as r SET firstname = ?, lastname = ?, ailment = ? WHERE r.firstname = ? AND r.lastname = ? AND r.ailment = ?;");
     ps.setString(1, firstName);
@@ -211,15 +231,16 @@ try {
     return didWork;
 
 }catch(SQLException e){
-
+    LOGGER.info("Error Updating Resident from the database.");
 }
+        LOGGER.info("Error Updating Resident.");
         return false;
     }
 
     @Override
     public List<Resident> getAllResidentsWithMeds() {
         int indexNum = 1;
-
+        LOGGER.info("Trying to get all Residents with Medication Needs.");
         //Instantiate a new ArrayLists of Residents
         List<Resident> residentList = new ArrayList<Resident>();
 
@@ -265,7 +286,67 @@ try {
             }
 
             System.out.println("===========================================================================================");
+            LOGGER.info("Successful in getting all Residents with Medication Needs.");
             return residentList;
+
+        }catch(SQLException e){
+            e.printStackTrace();
+
+        } catch (Exception e){
+
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Resident> getAllResidentsWithNurses() {
+        int indexNum = 0;
+        LOGGER.info("Trying to get all Residents with their assigned Nurse.");
+        //Instantiate a new ArrayLists of Residents
+        List<Resident> residentList = new ArrayList<Resident>();
+
+        //Instantiate a new ArrayLists of Residents
+        List<Nurse> nurseList = new ArrayList<Nurse>();
+
+        try {
+
+            PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM residents_nurses;");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                //Gets the data from the specified columns and uses them as parameters to create a new Resident
+                Resident resident = new Resident(rs.getString("firstname"), rs.getString("lastname"), rs.getString("ailment"), rs.getInt("nurseid"));
+                //Gets the data from the specified columns and uses them as parameters to create a new Nurse
+                residentList.add(resident);
+                if(rs.getString("nurseid") != null) {
+                    Nurse nurse = new Nurse(rs.getString("nurse_firstname"),rs.getString("nurse_lastname"), rs.getBoolean("iscert"), rs.getInt("assignments"), rs.getInt("nurseid"));
+
+                    nurseList.add(nurse);
+                }
+                //Adds the new resident to the residentList Array
+
+            }
+
+            System.out.println("===========================================================================================");
+
+            for (Resident resident : residentList) {
+
+                System.out.println("["+indexNum+ "] " + resident.toString());
+
+                if(nurseList.get(indexNum) != null) {
+                    System.out.println("["+indexNum+ "] " + nurseList.get(indexNum).toStringWId());
+                }else {
+                    System.out.println("There is no Nurse assigned to this Resident.");
+                }
+
+                System.out.println("-------------------------------------------------------------------------------------------");
+                ++indexNum;
+            }
+
+            LOGGER.info("Successful in getting all Residents with their Nurses.");
+            return residentList;
+
         }catch(SQLException e){
             e.printStackTrace();
 

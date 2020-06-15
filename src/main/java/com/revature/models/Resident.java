@@ -1,9 +1,13 @@
 package com.revature.models;
 
+import com.revature.services.ConnectionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Serializable;
 
 public class Resident implements Serializable {
-
+    private static final Logger LOGGER = LogManager.getLogger(Resident.class.getName());
 
     //These two Strings are for the first and last name for the Nurse obj
     private String firstName;
@@ -12,7 +16,7 @@ public class Resident implements Serializable {
     //This String holds what ailment the resident has
     private String ailment;
 
-    //
+    //This Int Identifies the nurse by id. For matching with Residents
     private int nurseid;
 
     /*------------------------------------------------------------------------------*/
@@ -20,10 +24,18 @@ public class Resident implements Serializable {
     /*------------------------------------------------------------------------------*/
 
     public Resident(String firstName, String lastName, String ailment) {
+        LOGGER.info("New Resident Created: " + firstName + " " + lastName + " " + ailment);
         this.firstName = firstName;
         this.lastName = lastName;
         this.ailment = ailment;
         this.nurseid = 0;
+    }
+    public Resident(String firstName, String lastName, String ailment, int nurseid) {
+        LOGGER.info("New Resident Created: " + firstName + " " + lastName + " " + ailment);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.ailment = ailment;
+        this.nurseid = nurseid;
     }
 
     /*------------------------------------------------------------------------------*/

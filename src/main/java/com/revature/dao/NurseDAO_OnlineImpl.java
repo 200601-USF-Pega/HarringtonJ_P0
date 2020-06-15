@@ -3,6 +3,8 @@ package com.revature.dao;
 import com.revature.models.Nurse;
 import com.revature.models.Resident;
 import com.revature.services.ConnectionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.sql.*;
@@ -16,10 +18,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
     ConnectionService connectionService = ConnectionService.getInstance();
 
-    //Setting Up Connection to our DataBase
-    public NurseDAO_OnlineImpl(){
-
-    }
+    private static final Logger LOGGER = LogManager.getLogger(NurseDAO_OnlineImpl.class.getName());
 
     @Override
     public List<Nurse> getAllNurses() {
@@ -27,6 +26,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
         //Instantiate a new ArrayLists of Nurses
         List<Nurse> nurseList = new ArrayList<Nurse>();
+        LOGGER.info("Attempting to get a list of all Nurses.");
 
         try {
 
@@ -49,14 +49,17 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                 System.out.println("["+indexNum+ "] " + nurse.toString());
                 ++indexNum;
             }
+            LOGGER.info("Successfully returned a list of all Nurses.");
             return nurseList;
         }catch(SQLException e){
+            LOGGER.error("Error getting a list of all Nurses.");
             e.printStackTrace();
 
         } catch (Exception e){
-
+            LOGGER.error("Returning a null list of all Nurses.");
         }
 
+        LOGGER.error("Returning a null list of all Nurses.");
         return null;
     }
 
@@ -67,7 +70,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
         List<Nurse> nurseList = new ArrayList<Nurse>();
 
         try {
-
+            LOGGER.info("Attempting to get a list of all Nurses.");
             PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM nurses;");
             ResultSet rs = ps.executeQuery();
 
@@ -77,15 +80,17 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                 //Adds the new nurse to the nurseList Array
                 nurseList.add(nurse);
             }
-            
+            LOGGER.info("Successfully returned a list of all Nurses.");
             return nurseList;
         }catch(SQLException e){
+            LOGGER.error("Error getting a list of all Nurses.");
             e.printStackTrace();
 
         } catch (Exception e){
-
+            LOGGER.error("Error getting a list of all Nurses.");
         }
 
+        LOGGER.error("Returning a null list of all Nurses.");
         return null;
     }
 
@@ -95,7 +100,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
     
     @Override
     public boolean addNurse(Nurse nurse) {
-
+        LOGGER.info("Attempting to add a Nurse.");
         nurse.toString();
         try {
 
@@ -104,7 +109,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
             nurseList.add(nurse);
 
             try{
-
+                LOGGER.info("Inserting Nurse into database.");
                 PreparedStatement ps = connectionService.getConnection().prepareStatement("INSERT INTO nurses (firstname, lastname, iscert, assignments) VALUES (?,?,?,?);");
                 ps.setString(1, nurse.getFirstname());
                 ps.setString(2, nurse.getLastname());
@@ -112,6 +117,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                 ps.setInt(4, nurse.getAssignments());
                 boolean didWork = ps.execute();
 
+                LOGGER.info("Successfully Added a Nurse.");
                 return didWork;
 
 
@@ -125,6 +131,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
         } catch(Exception e){
             System.out.println(e.getStackTrace());
             System.out.println("Error Adding Nurse. Please Check your inputs.");
+            LOGGER.error("Error Adding Nurse.");
             return false;
         }
 
@@ -133,10 +140,12 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
     @Override
     public boolean removeNurse(int indexNum) {
 
+        LOGGER.info("Attempting to remove a Nurse.");
         try {
             List<Nurse> nurseList = this.getAllNursesNoPrint();
             Nurse nurse = nurseList.get(indexNum - 1);
 
+            LOGGER.info("Deleting Nurse from the database.");
             //If both the Nurse's First and Last Name equals to what was inputted the Nurse is deleted.
             PreparedStatement ps = connectionService.getConnection().prepareStatement("DELETE FROM nurses as r WHERE r.firstname = ? AND r.lastname = ? AND iscert = ? AND assignments = ?;");
             ps.setString(1, nurse.getFirstname());
@@ -145,12 +154,15 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
             ps.setInt(4, nurse.getAssignments());
             boolean didWork = ps.execute();
             System.out.println("Deleted: " + nurse.toString());
+
+            LOGGER.info("Successfully Removed a Nurse.");
             return didWork;
 
 
 
 
         } catch(Exception e){
+            LOGGER.info("Error Removed a Nurse.");
             System.out.println("No Nurse exists with that name.");
             return false;
         }
@@ -161,6 +173,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
     @Override
     public boolean updateNurse(int indexNum) {
+        LOGGER.info("Attempting to Update a Nurse.");
         List<Nurse> nurseList = this.getAllNursesNoPrint();
         Nurse nurse = nurseList.get(indexNum - 1);
         Scanner sc = new Scanner(System.in);
@@ -206,24 +219,22 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
             boolean didWork = ps.execute();
             System.out.println("UPDATED: " + nurse.toString());
+            System.out.println("Nurse is now: " + new Nurse(firstName, lastName,iscert, nurse.getAssignments()));
+            LOGGER.info("Successful Updating a Nurse.");
+
             return didWork;
 
         }catch(SQLException e){
+            LOGGER.info("Error Updating Nurses from the database.");
 
         }
-        return false;    }
+        LOGGER.info("Error Updating Nurses from the database.");
 
-    @Override
-    public boolean addNurseToResident() {
+        return false;
+    }
 
-        ResidentDAO residentDAO = new ResidentDAO_OnlineImpl();
-        List<Resident> residentList = residentDAO.getAllResidentsNoPrint();
-        List<Nurse> nurseList = this.getAllNursesNoPrint();
 
-        int nurseIndex = 0;
-        int assignments = 0;
-        int noCertassignments = 0;
-
+    public void clearNurseToResident(){
         try{
             Statement mps = connectionService.getConnection().createStatement();
             mps.executeUpdate("UPDATE nurses SET assignments = 0");
@@ -233,7 +244,25 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
         }catch (SQLException e) {
             e.printStackTrace();
+            LOGGER.error("Error with Attempting to add the Nurses to Residents.");
+
         }
+    }
+
+
+    @Override
+    public boolean addNurseToResident() {
+        LOGGER.info("Attempting to add the Nurses to Residents.");
+
+        ResidentDAO residentDAO = new ResidentDAO_OnlineImpl();
+        List<Resident> residentList = residentDAO.getAllResidentsNoPrint();
+        List<Nurse> nurseList = this.getAllNursesNoPrint();
+
+        int nurseIndex = 0;
+        int assignments = 0;
+        int noCertassignments = 0;
+
+
 
 
         for(Resident resident : residentList){
@@ -245,7 +274,10 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
                     if (assignments > nurse.getAssignments() || assignments == 0) {
                         if (nurse.getMedCert() == true) {
+
                             assignments = assignments + 1;
+                            System.out.println(assignments);
+
                             try {
                                 PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE nurses SET assignments = ? WHERE firstname = ? AND lastname = ? AND iscert = ?;");
                                 ps.setInt(1, (nurse.getAssignments() + 1));
@@ -350,6 +382,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
         }
 
+        LOGGER.error("Error Attempting to add the Nurses to Residents.");
 
         return false;
     }

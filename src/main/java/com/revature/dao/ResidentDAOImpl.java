@@ -164,6 +164,17 @@ public class ResidentDAOImpl implements ResidentDAO{
 
     @Override
     public List<Resident> getAllResidentsWithMeds() {
+
+
+        return null;
+    }
+
+    @Override
+    public List<Resident> getAllResidentsWithNurses() {
+
+
+
+
         return null;
     }
 }

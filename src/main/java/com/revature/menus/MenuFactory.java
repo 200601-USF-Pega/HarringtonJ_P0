@@ -20,6 +20,9 @@ public class MenuFactory {
             case "Medications":
                 return new MedicationMenu();
 
+            case "MainMenu_Nurse":
+                return  new MainMenu_Nurse();
+
 
         }
 

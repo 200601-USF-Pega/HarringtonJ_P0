@@ -5,6 +5,8 @@ import com.revature.models.Medication;
 import com.revature.models.Medication;
 import com.revature.models.Medication;
 import com.revature.services.ConnectionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.sql.*;
@@ -17,21 +19,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
     ConnectionService connectionService = ConnectionService.getInstance();
 
-
-/*    Connection connection;*/
-
-    //Setting Up Connection to our DataBase
-    public MedicationDAO_OnlineImpl(){
-/*
-        try{
-            connection = DriverManager.getConnection("jdbc:postgresql://ruby.db.elephantsql.com:5432/yrngucii/", "yrngucii", "1FM_VybxeviYjdHIPgTGcB3nXwlndbh6" );
-            System.out.println("Successful Connection to Database!");
-        }catch (SQLException e){
-            System.out.println("Could not connect to Database!");
-            e.printStackTrace();
-        }*/
-
-    }
+    private static final Logger LOGGER = LogManager.getLogger(MedicationDAO_OnlineImpl.class.getName());
 
 
     @Override
@@ -40,6 +28,8 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
         //Instantiate a new ArrayLists of Medications
         List<Medication> medicationList = new ArrayList<Medication>();
+        LOGGER.info("Attempting to get a list of all Medications.");
+
 
         try {
 
@@ -62,13 +52,17 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
                 System.out.println("["+indexNum+ "] " + medication.toString());
                 ++indexNum;
             }
+            LOGGER.info("Successfully returned a list of all Medications.");
             return medicationList;
         }catch(SQLException e){
+            LOGGER.error("Error getting a list of all Medications.");
             e.printStackTrace();
 
         } catch (Exception e){
+            LOGGER.error("Error Returning a list of all Medications.");
 
         }
+        LOGGER.error("Returning a null list of all Medications.");
 
         return null;
     }
@@ -81,7 +75,7 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
         List<Medication> medicationList = new ArrayList<Medication>();
 
         try {
-
+            LOGGER.info("Attempting to get a list of all Medications.");
             PreparedStatement ps = connectionService.getConnection().prepareStatement("SELECT * FROM medications;");
             ResultSet rs = ps.executeQuery();
 
@@ -91,14 +85,19 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
                 //Adds the new medication to the medicationList Array
                 medicationList.add(medication);
             }
+            LOGGER.info("Successfully returned a list of all Medications.");
 
             return medicationList;
         }catch(SQLException e){
+            LOGGER.error("Error getting a list of all Medications.");
+
             e.printStackTrace();
 
         } catch (Exception e){
+            LOGGER.error("Error getting a list of all Medications.");
 
         }
+        LOGGER.error("Returning a null list of all Medications.");
 
         return null;
     }
@@ -108,6 +107,8 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
     @Override
     public boolean addNewMedication(Medication medication) {
+        LOGGER.info("Attempting to add a Medication.");
+
         medication.toString();
         try {
 
@@ -116,17 +117,21 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
             medicationList.add(medication);
 
             try{
+                LOGGER.info("Inserting Medication into database.");
 
                 PreparedStatement ps = connectionService.getConnection().prepareStatement("INSERT INTO medications (name, ailment, lethaldosage) VALUES (?,?,?);");
                 ps.setString(1, medication.getMedName());
                 ps.setString(2, medication.getTreatedAilment());
                 ps.setInt(3, medication.getLethalDosage());
                 boolean didWork = ps.execute();
+                LOGGER.info("Successfully Added a Medication.");
 
                 return didWork;
 
 
             }catch (SQLException e){
+                LOGGER.error("Error Adding Medication.");
+
                 e.printStackTrace();
             }
 
@@ -135,6 +140,8 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
         } catch(Exception e){
             System.out.println(e.getStackTrace());
+            LOGGER.error("Error Adding Medication.");
+
             System.out.println("Error Adding Medication. Please Check your inputs.");
             return false;
         }
@@ -144,8 +151,11 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
     @Override
     public boolean removeMedication(int indexNum) {
+        LOGGER.info("Attempting to remove a Medication.");
 
         try {
+            LOGGER.info("Deleting Medication from the database.");
+
             List<Medication> medicationList = this.getAllMedicationsNoPrint();
             Medication medication = medicationList.get(indexNum - 1);
 
@@ -156,12 +166,16 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
             ps.setInt(3, medication.getLethalDosage());
             boolean didWork = ps.execute();
             System.out.println("Deleted: " + medication.toString());
+            LOGGER.info("Successfully Removed a Medication.");
+
             return didWork;
 
 
 
 
         } catch(Exception e){
+            LOGGER.info("Error Removed a Medication.");
+
             System.out.println("No Medication exists with that name.");
             return false;
         }
@@ -172,6 +186,8 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
     @Override
     public boolean updateMedication(int indexNum) {
+        LOGGER.info("Attempting to Update a Medication.");
+
         List<Medication> medicationList = this.getAllMedicationsNoPrint();
         Medication medication = medicationList.get(indexNum - 1);
         Scanner sc = new Scanner(System.in);
@@ -204,17 +220,24 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
 
             boolean didWork = ps.execute();
             System.out.println("UPDATED: " + medication.toString());
+            LOGGER.info("Successful Updating a Medication.");
+
             return didWork;
 
         }catch(SQLException e){
+            LOGGER.info("Error Updating Medications from the database.");
 
         }
+        LOGGER.info("Error Updating Medications from the database.");
+
         return false;
 
     }
 
     @Override
     public List<Medication> getListOfNeededMedication() {
+        LOGGER.info("Attempting to get a List of ailments that need Medication to treat them.");
+
         int indexNum = 1;
 
         //Instantiate a new ArrayLists of Residents
@@ -247,9 +270,12 @@ public class MedicationDAO_OnlineImpl implements MedicationDAO{
             }
 
         }catch(SQLException e){
+            LOGGER.error("Error with Attempting to get a list of needed Medication.");
+
             e.printStackTrace();
 
         } catch (Exception e){
+            LOGGER.error("Error with Attempting to get a list of needed Medication.");
 
         }
 

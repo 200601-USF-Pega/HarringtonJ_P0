@@ -1,15 +1,21 @@
 package com.revature.menus;
 
 import com.revature.dao.ResidentDAO;
-import com.revature.dao.ResidentDAOImpl;
 import com.revature.dao.ResidentDAO_OnlineImpl;
 import com.revature.models.Resident;
+import com.revature.services.ConnectionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+
+
 public class ResidentMenu implements IMenu {
+
+    private static final Logger LOGGER = LogManager.getLogger(ResidentMenu.class.getName());
+
 
     @Override
     public void menuStart() {
@@ -25,6 +31,7 @@ public class ResidentMenu implements IMenu {
 
         try {
             //We put this in a try catch block as this will be attempting to connect to an Online database
+            LOGGER.info("Created new ResidentDAO_OnlineImpl object.");
             residentDAO = new ResidentDAO_OnlineImpl();
         } catch (Exception e) {
             e.printStackTrace();
@@ -43,6 +50,7 @@ public class ResidentMenu implements IMenu {
             System.out.println("|  Press [3] :  Remove a Resident                                   |");
             System.out.println("|  Press [4] :  Update a Resident                                   |");
             System.out.println("|  Press [5] :  Get a List of all Residents who need Medication     |");
+            System.out.println("|  Press [6] :  To see Each assigned Resident for each Nurse.       |");
             System.out.println("|  Press [0] :  Return to Main Menu                                 |");
             System.out.println("|===================================================================|");
 
@@ -57,6 +65,7 @@ public class ResidentMenu implements IMenu {
             switch (nextMenu) {
 
                 case 1:
+                    LOGGER.info("Called to get a list of all Residents.");
                     residentDAO.getAllResidents();
                     break;
 
@@ -96,15 +105,18 @@ public class ResidentMenu implements IMenu {
 
 
                     if(hasCondition) {
+                        LOGGER.info("Added a new Resident that HAS a ailment.");
                         Resident newResident = new Resident(firstName, lastName, condition);
                         System.out.println(newResident.toString());
                         residentDAO.addResident(newResident);
+
                     }
 
                     if(hasCondition == false){
-                    Resident newResident = new Resident(firstName, lastName, null);
+                        LOGGER.info("Added a new Resident that does NOT have an ailment.");
+                        Resident newResident = new Resident(firstName, lastName, null);
                         System.out.println(newResident.toString());
-                    residentDAO.addResident(newResident);
+                        residentDAO.addResident(newResident);
 
                 }
 
@@ -112,24 +124,7 @@ public class ResidentMenu implements IMenu {
 
                 case 3:
                     residentDAO.getAllResidents();
-                    System.out.println("Please Enter Resident's index number: ");
                     int indexNum = sc.nextInt();
-
-
-
-
-                    /*System.out.println("Please Enter Resident's first name: ");
-                    firstName = sc.next();
-
-
-                    System.out.println("Please Enter Resident's last name: ");
-                    lastName = sc.next();
-
-                    boolean b = residentDAO.removeResident(firstName, lastName);
-                    if(b){
-                        System.out.println("Removed Successfully: " + firstName + " " + lastName);
-                    }*/
-
                     residentDAO.removeResident(indexNum);
 
                     break;
@@ -145,6 +140,10 @@ public class ResidentMenu implements IMenu {
 
                 case 5:
                     residentDAO.getAllResidentsWithMeds();
+                    break;
+
+                case 6:
+                    residentDAO.getAllResidentsWithNurses();
                     break;
 
                 case 0:

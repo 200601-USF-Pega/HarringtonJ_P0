@@ -4,17 +4,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.revature.driver.Driver;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class ConnectionService {
+    private static final Logger LOGGER = LogManager.getLogger(ConnectionService.class.getName());
     private  static  ConnectionService connectionService_single_instance = null;
     private Connection connection;
 
     public ConnectionService(){
 
         try{
+
             connection = DriverManager.getConnection("jdbc:postgresql://ruby.db.elephantsql.com:5432/yrngucii/", "yrngucii", "1FM_VybxeviYjdHIPgTGcB3nXwlndbh6" );
-            System.out.println("Successful Connection to Database!");
+            LOGGER.info("Successful Connection to Database!");
         }catch (SQLException e){
-            System.out.println("Could not connect to Database!");
+            LOGGER.fatal("Could not connect to Database!");
             e.printStackTrace();
         }
 
@@ -28,7 +35,7 @@ public class ConnectionService {
     public static ConnectionService getInstance(){
 
         if( connectionService_single_instance == null) {
-            System.out.println("Connection Established");
+            LOGGER.info("Successful master Connection to Database created.");
             connectionService_single_instance = new ConnectionService();
         }
 
@@ -39,6 +46,7 @@ public class ConnectionService {
     @Override
     protected void finalize() throws Throwable {
         try{
+            LOGGER.info("Connection to Database Closed.");
             connection.close();
         }catch (Exception e){
 

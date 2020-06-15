@@ -1,8 +1,14 @@
 package com.revature.models;
 
+import com.revature.services.ConnectionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Serializable;
 
 public class Nurse implements Serializable {
+
+    private static final Logger LOGGER = LogManager.getLogger(Nurse.class.getName());
 
     //These two Strings are for the first and last name for the Nurse obj
     private String firstname;
@@ -14,15 +20,28 @@ public class Nurse implements Serializable {
     //This is the max number of residents a nurse can handle
     private int assignments;
 
+    private int nurseid;
+
     /*------------------------------------------------------------------------------*/
                                  /* Constructors */
     /*------------------------------------------------------------------------------*/
 
     public Nurse(String firstname, String lastname, boolean isMedCert, int assignments) {
+        LOGGER.info("New Nurse Created: " + firstname + " " + lastname + " " + isMedCert);
         this.firstname = firstname;
         this.lastname = lastname;
         this.isMedCert = isMedCert;
         this.assignments = assignments;
+        this.nurseid = 0;
+    }
+
+    public Nurse(String firstname, String lastname, boolean isMedCert, int assignments, int nurseId) {
+        LOGGER.info("New Nurse Created: " + firstname + " " + lastname + " " + isMedCert);
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.isMedCert = isMedCert;
+        this.assignments = assignments;
+        this.nurseid = nurseId;
     }
 
     @Override
@@ -32,6 +51,16 @@ public class Nurse implements Serializable {
                 ", lastname='" + lastname + '\'' +
                 ", isMedCert=" + isMedCert +
                 ", assignments=" + assignments +
+                '}';
+    }
+
+    public String toStringWId() {
+        return "Nurse{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", isMedCert=" + isMedCert +
+                ", assignments=" + assignments +
+                ", nurseid=" + nurseid +
                 '}';
     }
 

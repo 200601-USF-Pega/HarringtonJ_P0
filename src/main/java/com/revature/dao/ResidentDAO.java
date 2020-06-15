@@ -12,6 +12,7 @@ public interface ResidentDAO {
     public boolean removeResident(int indexNum);
     public boolean updateResident(int indexNum);
     public List<Resident> getAllResidentsWithMeds();
+    public List<Resident> getAllResidentsWithNurses();
 
 
 }

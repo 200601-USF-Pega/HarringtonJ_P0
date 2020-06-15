@@ -1,8 +1,14 @@
 package com.revature.models;
 
+import com.revature.services.ConnectionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.Serializable;
 
 public class Medication implements Serializable {
+
+    private static final Logger LOGGER = LogManager.getLogger(Medication.class.getName());
 
     //This is the name of the Medication
     String medName;
@@ -20,6 +26,7 @@ public class Medication implements Serializable {
 
 
     public Medication(String medName, String treatedAilment, int lethalDosage) {
+        LOGGER.info("New Medication: " + medName + " " + treatedAilment + " " + lethalDosage);
         this.medName = medName;
         this.treatedAilment = treatedAilment;
         this.lethalDosage = lethalDosage;
