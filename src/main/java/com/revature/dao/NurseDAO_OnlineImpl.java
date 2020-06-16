@@ -8,10 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class NurseDAO_OnlineImpl implements NurseDAO {
@@ -259,26 +256,10 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
         List<Nurse> nurseList = this.getAllNursesNoPrint();
 
         int nurseIndex = 0;
-        int assignments = 0;
-        int noCertassignments = 0;
-
-
-
-
 
         for(Resident resident : residentList){
 
-//            for(Nurse nurse: nurseList){
-//                if(nurse.getMedCert()) {
-//                    if (assignments < nurse.getAssignments()) {
-//                        assignments = nurse.getAssignments();
-//                    }
-//                }else{
-//                    if (noCertassignments < nurse.getAssignments()) {
-//                        noCertassignments = nurse.getAssignments();
-//                    }
-//                }
-//            }
+            Collections.sort(nurseList);
 
 
             if(resident.getAilment() != null){
@@ -286,14 +267,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                 for(Nurse nurse : nurseList) {
 
 
-
-
-
-                    if (assignments > nurse.getAssignments() || assignments == 0) {
                         if (nurse.getMedCert() == true) {
-
-                            assignments = assignments + 1;
-                            System.out.println(assignments);
 
                             try {
                                 PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE nurses SET assignments = ? WHERE firstname = ? AND lastname = ? AND iscert = ?;");
@@ -338,7 +312,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                             System.out.println(nurse.toString() + " Assigned to: " + resident.toString());
                             break;
                         }
-                    }
+
                 }
 
             }else{
@@ -347,9 +321,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
 
 
-                    if(noCertassignments > nurse.getAssignments()  || noCertassignments == 0) {
                         if (nurse.getMedCert() == false) {
-                            noCertassignments = noCertassignments + 1;
 
                             try {
                                 PreparedStatement ps = connectionService.getConnection().prepareStatement("UPDATE nurses SET assignments = ? WHERE firstname = ? AND lastname = ? AND iscert = ?;");
@@ -392,7 +364,7 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
                             resident.setNurseid(nurseIndex);
                             System.out.println(nurse.toString() + " Assigned to: " + resident.toString());
                             break;
-                        }
+
                     }
                 }
             }
