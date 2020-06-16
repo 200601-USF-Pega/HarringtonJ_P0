@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 
-public class Nurse implements Serializable {
+public class Nurse implements Serializable, Comparable<Nurse> {
 
     private static final Logger LOGGER = LogManager.getLogger(Nurse.class.getName());
 
@@ -63,6 +63,21 @@ public class Nurse implements Serializable {
                 ", nurseid=" + nurseid +
                 '}';
     }
+
+@Override
+public int compareTo(Nurse o){
+
+        if(this.assignments > o.assignments) {
+            return 1;
+        }
+        if(this.assignments < o.assignments) {
+            return -1;
+        }
+        else
+            return 0;
+}
+
+
 
     /*------------------------------------------------------------------------------*/
                             /* Getters and Setters  */

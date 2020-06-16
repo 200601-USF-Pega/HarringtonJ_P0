@@ -265,11 +265,28 @@ public class NurseDAO_OnlineImpl implements NurseDAO {
 
 
 
+
         for(Resident resident : residentList){
+
+//            for(Nurse nurse: nurseList){
+//                if(nurse.getMedCert()) {
+//                    if (assignments < nurse.getAssignments()) {
+//                        assignments = nurse.getAssignments();
+//                    }
+//                }else{
+//                    if (noCertassignments < nurse.getAssignments()) {
+//                        noCertassignments = nurse.getAssignments();
+//                    }
+//                }
+//            }
+
 
             if(resident.getAilment() != null){
 
                 for(Nurse nurse : nurseList) {
+
+
+
 
 
                     if (assignments > nurse.getAssignments() || assignments == 0) {

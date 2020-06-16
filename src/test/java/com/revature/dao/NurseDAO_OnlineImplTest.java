@@ -36,6 +36,7 @@ public class NurseDAO_OnlineImplTest extends TestCase {
         nurse = new Nurse("Klye", "Noid", false, 5);
 
 
+
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.getString(1)).thenReturn(nurse.getFirstname());
         when(resultSet.getString(2)).thenReturn(nurse.getLastname());
