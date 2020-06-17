@@ -40,7 +40,7 @@ public class ResidentDAO_OnlineImplTest extends TestCase {
     when(mrs.getString(2)).thenReturn(resident.getFirstName());
     when(mrs.getString(3)).thenReturn(resident.getLastName());
     when(mrs.getString(4)).thenReturn(resident.getAilment());
-    when(mrs.getInt(5)).thenReturn(resident.getNurseid());
+    //when(mrs.getInt(5)).thenReturn(resident.getNurseid());
     //when(mps.executeQuery()).thenReturn(mrs);
     }
 

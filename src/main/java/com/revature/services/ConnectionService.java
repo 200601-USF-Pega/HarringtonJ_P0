@@ -3,6 +3,7 @@ package com.revature.services;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import com.revature.driver.Driver;
 import org.apache.logging.log4j.LogManager;
@@ -14,7 +15,10 @@ public class ConnectionService {
     private  static  ConnectionService connectionService_single_instance = null;
     private Connection connection;
 
+
+
     public ConnectionService(){
+
 
         try{
 

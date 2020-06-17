@@ -24,12 +24,12 @@ public class MainMenu implements IMenu {
         while (true) {
         //Options
             //Option UI
-        System.out.println("|=====================================|");
-        System.out.println("|  Press [1] : To manage Nurses.      |");
-        System.out.println("|  Press [2] : To manage Residents    |");
-        System.out.println("|  Press [3] : To manage Medications. |");
-        System.out.println("|  Press [0] : To exit the program.   |");
-        System.out.println("|=====================================|");
+        System.out.println("|=============================================|");
+        System.out.println("|  Press [1] : To manage Nurses.              |");
+        System.out.println("|  Press [2] : To manage Residents            |");
+        System.out.println("|  Press [3] : To manage Medications.         |");
+        System.out.println("|  Press [0] : To go back to the Login Menu   |");
+        System.out.println("|=============================================|");
 
 
 

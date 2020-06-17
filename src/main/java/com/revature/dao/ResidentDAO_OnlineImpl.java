@@ -239,7 +239,7 @@ try {
 
     @Override
     public List<Resident> getAllResidentsWithMeds() {
-        int indexNum = 1;
+        int indexNum = 0;
         LOGGER.info("Trying to get all Residents with Medication Needs.");
         //Instantiate a new ArrayLists of Residents
         List<Resident> residentList = new ArrayList<Resident>();
@@ -274,7 +274,9 @@ try {
 
             for (Resident resident : residentList) {
 
-                System.out.println("["+indexNum+ "] " + resident.toString());
+                if(resident.getAilment() != null) {
+                    System.out.println("[" + indexNum + "] " + resident.toString());
+                }
                 if(medicationList.get(indexNum) != null) {
                     System.out.println(medicationList.get(indexNum).toString());
                 }else {

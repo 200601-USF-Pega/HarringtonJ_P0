@@ -74,7 +74,7 @@ public class MainMenu_Nurse implements IMenu {
         System.out.println("|  Press [1] : To see a list of Nurses                            |");
         System.out.println("|  Press [2] : To see Each assigned Resident for each Nurse.      |");
         System.out.println("|  Press [3] : Check What Medication is in stock                  |");
-        System.out.println("|  Press [0] : To exit the program.                               |");
+        System.out.println("|  Press [0] : To go back to the login menu                       |");
         System.out.println("|=================================================================|");
 
 
@@ -98,11 +98,12 @@ public class MainMenu_Nurse implements IMenu {
                 break;
 
             case 0:
-                System.out.println("Exiting program...");
-                System.exit(0);
+                newMenu = new LoginMenu();
+                newMenu.menuStart();
                 break;
 
             default:
+
                 System.out.println("Please Enter one of the options");
                 continue;
 
